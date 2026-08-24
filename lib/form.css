@@ -108,11 +108,22 @@
 }
 
 .form-field__error {
+  display: none;
   color: #ff4d4f;
   font-size: 12px;
   margin-top: 4px;
-  min-height: 18px;
   line-height: 18px;
+}
+
+/* 有错误信息时才显示 */
+.form-field--error .form-field__error {
+  display: block;
+}
+
+/* 始终占位显示模式：错误元素一直预留空间 */
+.form--error-display-always .form-field__error {
+  display: block;
+  min-height: 18px;
 }
 
 /* 错误状态下的输入框样式 */
