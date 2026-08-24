@@ -16,17 +16,21 @@
   position: relative;
   display: inline-block;
   width: 100%;
+  vertical-align: middle;
 }
 
 .select__trigger {
+  box-sizing: border-box;
   border: 1px solid #ccc;
-  padding: 4px 12px;
+  padding: 8px 12px;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .select__trigger:focus,
@@ -81,13 +85,20 @@
   color: #eeeeee;
   border-radius: 4px;
   font-size: 14px;
+  line-height: 1.5;
   width: 100%;
   box-sizing: border-box;
+  vertical-align: middle;
 }
 
 .form-field__textarea {
   resize: vertical;
-  vertical-align: middle;
+}
+
+/* placeholder 提示文字统一用稍淡的颜色 */
+.form-field__input::placeholder,
+.form-field__textarea::placeholder {
+  color: #999;
 }
 
 /* ========== 验证状态样式 ========== */
@@ -151,4 +162,23 @@
 
 .form-group__fields .form-field {
   position: relative;
+}
+
+/* ========== 可搜索下拉框样式（搜索模式下 trigger 为 input）========== */
+/* 让 trigger 作为 input 时与原 div 外观保持一致 */
+input.select__trigger {
+  width: 100%;
+  background: transparent;
+  color: #eeeeee;
+  cursor: text;
+  outline: none;
+}
+
+input.select__trigger::placeholder {
+  color: #999;
+}
+
+/* 搜索模式下，下拉选项隐藏时的样式 */
+.select__option[style*="display: none"] {
+  display: none !important;
 }
