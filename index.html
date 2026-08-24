@@ -38,6 +38,7 @@
                     label: '用户名',
                     type: 'text',
                     value: '',
+                    validateTrigger: 'blur',  // 失去焦点时验证（默认）
                     rules: {
                         required: true,
                         minLength: 3,
@@ -56,6 +57,7 @@
                     label: '密码',
                     type: 'password',
                     value: '',
+                    validateTrigger: 'input',  // 输入时实时验证
                     rules: {
                         required: true,
                         minLength: 6,
@@ -72,6 +74,7 @@
                     label: '邮箱',
                     type: 'text',
                     value: '',
+                    validateTrigger: 'blur',  // 失去焦点时验证
                     rules: {
                         required: true,
                         pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
@@ -86,8 +89,9 @@
                     label: '个人简介',
                     type: 'textarea',
                     value: '',
+                    validateTrigger: 'submit',  // 仅在提交时验证
                     rules: {
-                        maxLength: 10,
+                        maxLength: 200,
                         message: {
                             maxLength: '{label}长度不能超过{maxLength}个字符'
                         }
@@ -98,6 +102,7 @@
                     label: '角色',
                     type: 'select',
                     value: '',
+                    validateTrigger: 'blur',  // 失去焦点时验证
                     rules: {
                         required: true,
                         message: {
@@ -120,6 +125,7 @@
                             type: 'select',
                             value: '86',
                             width: '35%',
+                            validateTrigger: 'blur',
                             rules: {
                                 required: true,
                                 message: {
@@ -140,6 +146,7 @@
                             type: 'text',
                             value: '',
                             width: '65%',
+                            validateTrigger: 'input',
                             rules: {
                                 required: true,
                                 minLength: 4,
