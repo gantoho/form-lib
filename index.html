@@ -41,6 +41,11 @@
                     value: '',
                     placeholder: '输入用户名',
                     validateTrigger: 'blur',  // 失去焦点时验证（默认）
+                    icons: {
+                        error: true,  // 验证失败时显示错误图标
+                        info: '只能包含字母、数字和下划线，长度 3-20 位',
+                        clear: true,
+                    },
                     rules: {
                         required: true,
                         minLength: 3,
@@ -61,6 +66,11 @@
                     value: '',
                     placeholder: '设置您的密码',
                     validateTrigger: 'input',  // 输入时实时验证
+                    icons: {
+                        passwordToggle: true,  // 显示/隐藏密码切换
+                        info: { icon: true, text: '长度 6-20 位，建议包含字母和数字' },
+                        clear: true,
+                    },
                     rules: {
                         required: true,
                         minLength: 6,
@@ -109,6 +119,13 @@
                     searchable: true,  // 启用搜索功能
                     placeholder: '搜索角色...',
                     validateTrigger: 'blur',
+                    icons: {
+                        // 自定义 svg 图标（也可用 { src: 'url' } 指定图片地址）
+                        info: {
+                            icon: { svg: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm.5 3h-1v1h1V3zM8 5.5a.75.75 0 01.53 1.28L7.5 8.3a.75.75 0 00-.22.53V10h2v-.6a.7.7 0 01.2-.5l1.1-1.1a.75.75 0 000-1.06L8.5 5.4A.75.75 0 008 5.5z"/></svg>' },
+                            text: '支持输入关键字搜索角色',
+                        },
+                    },
                     rules: {
                         required: true,
                         message: {
@@ -198,6 +215,10 @@
                             value: '',
                             width: '65%',
                             validateTrigger: 'input',
+                            icons: {
+                                clear: true,  // 一键清空
+                                info: '请输入 11 位大陆手机号',
+                            },
                             rules: {
                                 required: true,
                                 minLength: 4,

@@ -167,6 +167,97 @@
   position: relative;
 }
 
+/* ========== 控件容器与 Icon 组 ========== */
+.form-field__control {
+  position: relative;
+}
+
+.form-field__icons {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 5;
+}
+
+.form-field__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: #999;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.form-field__icon svg,
+.form-field__icon img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* 错误图标：验证失败时才显示 */
+.form-field__icon--error {
+  display: none;
+  color: #ff4d4f;
+  cursor: default;
+}
+
+.form-field--error .form-field__icon--error {
+  display: flex;
+}
+
+/* 下拉箭头、提示图标为只读，不响应点击 */
+.form-field__icon--arrow,
+.form-field__icon--info {
+  cursor: default;
+}
+
+/* 提示图标 tooltip */
+.form-field__icon--info {
+  position: relative;
+}
+
+.form-field__icon--info:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  z-index: 200;
+}
+
+/* 根据 icon 数量为输入控件预留右侧空间，避免文字与图标重叠 */
+.form-field__control--icons-1 .form-field__input,
+.form-field__control--icons-1 .form-field__textarea,
+.form-field__control--icons-1 .select__trigger {
+  padding-right: 34px;
+}
+
+.form-field__control--icons-2 .form-field__input,
+.form-field__control--icons-2 .form-field__textarea,
+.form-field__control--icons-2 .select__trigger {
+  padding-right: 52px;
+}
+
+.form-field__control--icons-3 .form-field__input,
+.form-field__control--icons-3 .form-field__textarea,
+.form-field__control--icons-3 .select__trigger {
+  padding-right: 70px;
+}
+
 /* ========== 可搜索下拉框样式（搜索模式下 trigger 为 input）========== */
 /* 让 trigger 作为 input 时与原 div 外观保持一致 */
 input.select__trigger {

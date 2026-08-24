@@ -291,6 +291,58 @@ rules: {
 
 ---
 
+## icons — 图标组
+
+每个字段可通过 `icons` 配置其控件（输入框 / 文本域 / 下拉）**右侧的图标组**。控件外部包裹了容器 `.form-field__control`，图标组 `.form-field__icons` 绝对定位在其内部右端，方便统一调整布局。
+
+```javascript
+{
+    name: 'username', label: '用户名', type: 'text',
+    icons: {
+        error: true,                 // 验证失败时显示错误图标
+        info: '只能包含字母、数字和下划线', // 提示图标 + hover 提示文字
+        clear: true,                 // 一键清空（仅在有值时显示）
+    },
+}
+```
+
+| 键 | 类型 | 说明 |
+|---|---|---|
+| `error` | `boolean` 或图标配置 | 验证失败时显示红色错误图标，配合 `.form-field--error` 自动显隐 |
+| `info` | `string` 或 `{ icon, text }` | 提示图标；`string` 形式即提示文字，`{ icon: 图标配置, text: 'hover 提示' }` 可自定义图标与文字 |
+| `passwordToggle` | `boolean` | 仅对 `type: 'password'` 生效，显示/隐藏密码切换眼睛图标 |
+| `clear` | `boolean` | 一键清空；仅在字段有值时显示，值变化时自动显隐 |
+
+**控件专有图标（无需配置，自动出现）：**
+
+- 自定义下拉（`type: 'select'`）在触发器右侧自动显示下拉箭头 `.form-field__icon--arrow`。
+
+**图标配置格式（`error` 设为对象、或 `info.icon`）支持：**
+
+```javascript
+// 1）使用内置默认（传 true 或不配图标即用默认）
+icon: true
+
+// 2）直接传 svg 字符串
+icon: '<svg viewBox="0 0 16 16"><path d="..."/></svg>'
+
+// 3）svg 字段
+icon: { svg: '<svg>...</svg>' }
+
+// 4）图片地址资源
+icon: { src: 'https://example.com/icon.png' }   // 或 image: 'url'
+```
+
+**布局细节：**
+
+- 图标组在控件右侧垂直居中；控件会根据图标数量自动预留右侧内边距（`.form-field__control--icons-1/2/3` → `padding-right: 34/52/70px`），避免文字与图标重叠。
+- 错误图标默认隐藏，字段进入 `.form-field--error` 状态（验证失败）时显示。
+- 提示图标 hover 时展示 `data-tooltip` 文本气泡（CSS `::after`）。
+- 密码切换、清空图标带点击反馈（`cursor: pointer`）；错误、箭头、提示图标为只读。
+- 清空对 input/textarea/搜索模式下拉直接清空；对非搜索模式的自定义下拉会复位选中状态。
+
+---
+
 ## 字段分组 group
 
 `type: 'group'` 用于把多个字段放在同一行（flex 横向排列）。
@@ -444,6 +496,15 @@ form.setValues({ username: 'admin', role: 'admin' });
 | `.form-group__label` | Element | 分组标签 |
 | `.form-group__fields` | Element | 分组字段行（flex 容器） |
 | `.form--error-display-always` | Modifier | 容器级修饰符，`errorDisplay: 'always'` 时追加 |
+| `.form-field__control` | Element | 控件容器（包裹控件与 icon 组，`position: relative`） |
+| `.form-field__icons` | Element | 图标组容器（绝对定位在控件右侧） |
+| `.form-field__icon` | Element | 单个图标 |
+| `.form-field__icon--error` | Element | 错误图标（验证失败时显示） |
+| `.form-field__icon--info` | Element | 提示图标（hover 显示 tooltip） |
+| `.form-field__icon--toggle` / `--password-on` / `--password-off` | Element | 密码显示/隐藏切换图标 |
+| `.form-field__icon--clear` | Element | 清空图标（仅在有值时显示） |
+| `.form-field__icon--arrow` | Element | 下拉箭头（select 自动追加） |
+| `.form-field__control--icons-{n}` | Modifier | 图标数量为 n 时，控件预留对应右侧内边距 |
 
 ### 错误样式
 
