@@ -116,3 +116,40 @@
 .form-field--error .select__trigger:focus {
   outline-color: #ff4d4f;
 }
+
+/* ========== 字段分组布局样式 ========== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group__label {
+  display: block;
+  margin-bottom: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.form-group__fields {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* 分组内的字段样式调整 */
+.form-group__fields .form-field {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* 分组内错误信息定位 */
+.form-group__fields .form-field__error {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  white-space: nowrap;
+}
+
+.form-group__fields .form-field {
+  position: relative;
+  padding-bottom: 22px;
+}
