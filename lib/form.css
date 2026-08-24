@@ -152,14 +152,6 @@
   flex: 1;
 }
 
-/* 分组内错误信息定位 */
-.form-group__fields .form-field__error {
-  position: absolute;
-  bottom: -20px;
-  left: 0;
-  white-space: nowrap;
-}
-
 .form-group__fields .form-field {
   position: relative;
 }
