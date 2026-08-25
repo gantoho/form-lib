@@ -41,7 +41,7 @@
                     validateTrigger: 'blur',  // 失去焦点时验证（默认）
                     icons: {
                         error: true,  // 验证失败时显示错误图标
-                        info: '只能包含字母、数字和下划线，长度 3-20 位',
+                        info: { text: '只能包含字母、数字和下划线，长度 3-20 位', tooltipPosition: 'left' },
                     },
                     rules: {
                         required: true,
@@ -65,7 +65,7 @@
                     validateTrigger: 'input',  // 输入时实时验证
                     icons: {
                         passwordToggle: true,  // 显示/隐藏密码切换
-                        info: { icon: true, text: '长度 6-20 位，建议包含字母和数字' },
+                        info: { icon: true, text: '长度 6-20 位，建议包含字母和数字', tooltipPosition: 'bottom' },
                         clear: true,
                     },
                     rules: {

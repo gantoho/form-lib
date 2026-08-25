@@ -311,7 +311,7 @@ rules: {
 | 键 | 类型 | 说明 |
 |---|---|---|
 | `error` | 图标配置 | 验证失败时显示错误图标，配合 `.form-field--error` 自动显隐 |
-| `info` | `string` 或 `{ icon, text }` | 提示图标；`string` 形式即 hover 提示文字；`{ icon: 图标配置, text: 'hover 提示' }` 可自定义图标与文字 |
+| `info` | `string` 或 `{ icon, text, tooltipPosition }` | 提示图标；`string` 形式即 hover 提示文字；`{ icon: 图标配置, text: 'hover 提示', tooltipPosition: 'top' }` 可自定义图标、文字与提示框位置 |
 | `passwordToggle` | `boolean` | 仅对 `type: 'password'` 生效，显示/隐藏密码切换眼睛图标 |
 | `clear` | `boolean` | 一键清空；仅在字段有值时显示，值变化时自动显隐 |
 
@@ -338,11 +338,32 @@ icon: { image: 'https://example.com/icon.png' }
 
 > 字符串一律视为 SVG HTML；图片链接必须用 `{ src }` 或 `{ image }` 对象格式，不可直接传 URL 字符串。
 
+**info 提示框配置：**
+
+`info` 支持 `tooltipPosition` 设置提示框首选方向，可选值：
+
+| 值 | 说明 |
+|---|---|
+| `'top'` | 默认，提示框在图标上方 |
+| `'bottom'` | 提示框在图标下方 |
+| `'left'` | 提示框在图标左侧 |
+| `'right'` | 提示框在图标右侧 |
+
+```javascript
+// 简写（默认 top）
+info: '提示文字'
+
+// 完整配置
+info: { icon: true, text: '提示文字', tooltipPosition: 'bottom' }
+```
+
+- 提示框带箭头指示器（CSS `::before` 三角形），方向与气泡位置一致。
+- 自动边界检测：hover 时若首选方向会导致提示框被窗口截断，会自动按优先级切换到可用方向（top → bottom → left → right），离开鼠标后恢复首选方向。
+
 **布局细节：**
 
 - 图标组在控件右侧垂直居中；控件会根据图标数量自动预留右侧内边距（`.form-field__control--icons-1/2/3` → `padding-right: 34/52/70px`），避免文字与图标重叠。
 - 错误图标默认隐藏，字段进入 `.form-field--error` 状态（验证失败）时显示。
-- 提示图标 hover 时展示 `data-tooltip` 文本气泡（CSS `::after`）。
 - 密码切换、清空图标带点击反馈（`cursor: pointer`）；错误、箭头、提示图标为只读。
 - 清空对 input/textarea/搜索模式下拉直接清空；对非搜索模式的自定义下拉会复位选中状态。
 

@@ -222,20 +222,91 @@
   position: relative;
 }
 
-.form-field__icon--info:hover::after {
-  content: attr(data-tooltip);
+/* tooltip 通用样式（气泡 + 箭头） */
+.form-field__icon--info::after,
+.form-field__icon--info::before {
   position: absolute;
-  bottom: 150%;
-  left: 50%;
-  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s, visibility .15s;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* 气泡 */
+.form-field__icon--info::after {
+  content: attr(data-tooltip);
   background: #333;
   color: #fff;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border-radius: 4px;
   font-size: 12px;
   line-height: 1.4;
   white-space: nowrap;
-  z-index: 200;
+}
+
+/* 箭头（三角形） */
+.form-field__icon--info::before {
+  content: '';
+  border: 5px solid transparent;
+}
+
+.form-field__icon--info:hover::after,
+.form-field__icon--info:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---- 方向：top（默认）---- */
+.form-field__icon--info[data-tooltip-pos="top"]::after {
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.form-field__icon--info[data-tooltip-pos="top"]::before {
+  bottom: calc(100% + 0px);
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: #333;
+}
+
+/* ---- 方向：bottom ---- */
+.form-field__icon--info[data-tooltip-pos="bottom"]::after {
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.form-field__icon--info[data-tooltip-pos="bottom"]::before {
+  top: calc(100% + 0px);
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: #333;
+}
+
+/* ---- 方向：left ---- */
+.form-field__icon--info[data-tooltip-pos="left"]::after {
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.form-field__icon--info[data-tooltip-pos="left"]::before {
+  right: calc(100% + 0px);
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: #333;
+}
+
+/* ---- 方向：right ---- */
+.form-field__icon--info[data-tooltip-pos="right"]::after {
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.form-field__icon--info[data-tooltip-pos="right"]::before {
+  left: calc(100% + 0px);
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: #333;
 }
 
 /* 根据 icon 数量为输入控件预留右侧空间，避免文字与图标重叠 */
