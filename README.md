@@ -299,7 +299,7 @@ rules: {
 {
     name: 'username', label: '用户名', type: 'text',
     icons: {
-        error: true,                 // 验证失败时显示错误图标
+        error: true,                 // 验证失败时显示错误图标（使用内置默认）
         info: '只能包含字母、数字和下划线', // 提示图标 + hover 提示文字
         clear: true,                 // 一键清空（仅在有值时显示）
     },
@@ -308,30 +308,33 @@ rules: {
 
 | 键 | 类型 | 说明 |
 |---|---|---|
-| `error` | `boolean` 或图标配置 | 验证失败时显示红色错误图标，配合 `.form-field--error` 自动显隐 |
-| `info` | `string` 或 `{ icon, text }` | 提示图标；`string` 形式即提示文字，`{ icon: 图标配置, text: 'hover 提示' }` 可自定义图标与文字 |
+| `error` | 图标配置 | 验证失败时显示错误图标，配合 `.form-field--error` 自动显隐 |
+| `info` | `string` 或 `{ icon, text }` | 提示图标；`string` 形式即 hover 提示文字；`{ icon: 图标配置, text: 'hover 提示' }` 可自定义图标与文字 |
 | `passwordToggle` | `boolean` | 仅对 `type: 'password'` 生效，显示/隐藏密码切换眼睛图标 |
 | `clear` | `boolean` | 一键清空；仅在字段有值时显示，值变化时自动显隐 |
 
 **控件专有图标（无需配置，自动出现）：**
 
-- 自定义下拉（`type: 'select'`）在触发器右侧自动显示下拉箭头 `.form-field__icon--arrow`。
+- 自定义下拉（`type: 'select'`）在触发器右侧自动显示下拉箭头。
 
-**图标配置格式（`error` 设为对象、或 `info.icon`）支持：**
+**图标配置格式（统一规则，适用于所有 icon）：**
 
 ```javascript
-// 1）使用内置默认（传 true 或不配图标即用默认）
+// 1）使用内置默认图标（传 true 或不传）
 icon: true
 
-// 2）直接传 svg 字符串
-icon: '<svg viewBox="0 0 16 16"><path d="..."/></svg>'
+// 2）SVG 字符串
+icon: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor"/></svg>'
 
-// 3）svg 字段
-icon: { svg: '<svg>...</svg>' }
+// 3）SVG 对象格式
+icon: { svg: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor"/></svg>' }
 
-// 4）图片地址资源
-icon: { src: 'https://example.com/icon.png' }   // 或 image: 'url'
+// 4）图片资源链接（必须用对象格式，不可直接传 URL 字符串）
+icon: { src: 'https://example.com/icon.png' }
+icon: { image: 'https://example.com/icon.png' }
 ```
+
+> 字符串一律视为 SVG HTML；图片链接必须用 `{ src }` 或 `{ image }` 对象格式，不可直接传 URL 字符串。
 
 **布局细节：**
 
