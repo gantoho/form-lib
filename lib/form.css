@@ -91,6 +91,7 @@
 
 .form-field__textarea {
   resize: vertical;
+  font-family: auto;
 }
 
 /* placeholder 提示文字统一用稍淡的颜色 */
