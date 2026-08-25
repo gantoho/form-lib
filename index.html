@@ -32,7 +32,7 @@
     <script>
         const form = new Form({
             container: document.getElementById('app'),
-            errorDisplay: 'auto',  // 始终占位显示错误信息
+            errorDisplay: 'always',  // 始终占位显示错误信息
             fields: [
                 {
                     name: 'username',
@@ -44,7 +44,6 @@
                     icons: {
                         error: true,  // 验证失败时显示错误图标
                         info: '只能包含字母、数字和下划线，长度 3-20 位',
-                        clear: true,
                     },
                     rules: {
                         required: true,
