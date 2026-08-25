@@ -21,6 +21,7 @@
   - [options — 下拉选项](#options--下拉选项)
   - [searchable — 可搜索下拉](#searchable--可搜索下拉)
   - [dropdownWidth — 下拉面板宽度](#dropdownwidth--下拉面板宽度)
+  - [icons — 图标组](#icons--图标组)
 - [字段分组 group](#字段分组-group)
 - [错误提示与模板变量](#错误提示与模板变量)
 - [errorDisplay — 错误显示模式](#errordisplay--错误显示模式)
@@ -116,6 +117,7 @@ const form = new Form({
 | `options` | `array` | `[]` | select | 下拉选项数组，见 [options](#options--下拉选项) |
 | `searchable` | `boolean` | `false` | select | 是否可搜索，见 [searchable](#searchable--可搜索下拉) |
 | `dropdownWidth` | `string` |  | select(组内) | 下拉面板宽度相对所在组的百分比，见 [dropdownWidth](#dropdownwidth--下拉面板宽度) |
+| `icons` | `object` |  | 非 group | 右侧图标组配置，见 [icons](#icons--图标组) |
 
 ### type
 
