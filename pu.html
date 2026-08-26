@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="lib/form.css">
+    <style>
+        .right_top_tab {
+            display: flex;
+            background-color: #EEEEEE;
+            padding: 4px;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 1000px;
+            gap: 4px;
+            position: relative;
+            margin-bottom: 24px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .right_top_tab li {
+            font-size: 16px;
+            text-align: left;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0 !important;
+        }
+
+        .right_top_tab li a {
+            color: #232020;
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 100px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .right_top_tab li.active a {
+            color: #EEEEEE;
+            transition: all ease-in-out 0.3s;
+        }
+
+        .right_top_tab i {
+            display: inline-block;
+            width: calc(50% - 6px);
+            height: calc(100% - 8px);
+            background-color: #006BFF;
+            position: absolute;
+            top: 4px;
+            border-radius: 100px;
+            z-index: 0;
+            transition: all .3s ease-in-out;
+        }
+
+        .right_top_tab li:nth-child(1).active~i {
+            left: 4px;
+        }
+
+        .right_top_tab li:nth-child(2).active~i {
+            left: calc(50% + 2px);
+        }
+
+        .top_live_form ul li.email,
+        .top_live_form ul li.phone_row {
+            display: none;
+        }
+
+        .top_live_form ul li.email.active,
+        .top_live_form ul li.phone_row.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="right_top_tab">
+        <li class="email_tab to_strong active"><a href="javascript:;">Email Address</a></li>
+        <li class="phone_tab to_strong"><a href="javascript:;">Phone Number</a></li>
+        <i></i>
+    </ul>
+    <div id="app"></div>
+    <button id="print">提交表单</button>
+
+    <script src="lib/form.js"></script>
+    <script>
+        const form = new Form({
+            container: '#app',
+            fields: [
+                {
+                    name: 'country',
+                    type: 'select',
+                    value: '',
+                    searchable: true,
+                    placeholder: '居住国家',
+                    validateTrigger: 'change',
+                    rules: [
+                        { required: true, message: '{label}是必填项。' },
+                    ],
+                    icons: {
+                        error: { src: 'https://www.puprime.com/wp-content/themes/puprime_new/images/live_error_icon.webp' },
+                    },
+                    options: [
+                        "Aland Islands",
+                        "Albania",
+                        "Algeria",
+                        "Andorra",
+                        "Angola",
+                        "Anguilla",
+                        "Antarctica",
+                        "Antigua And Barbuda",
+                        "Argentina",
+                        "Armenia",
+                        "Aruba",
+                        "Austria",
+                        "Azerbaijan",
+                        "Bahamas",
+                        "Bahrain",
+                        "Bangladesh",
+                        "Barbados",
+                        "Belgium",
+                        "Belize",
+                        "Benin",
+                        "Bermuda",
+                        "Bhutan",
+                        "Bolivia",
+                        "Botswana",
+                        "Bouvet Island",
+                        "Bosnia and Herzegovina",
+                        "Brazil",
+                        "British Indian Ocean Territory",
+                        "Brunei Darussalam",
+                        "Bulgaria",
+                        "Burkina Faso",
+                        "Belarus",
+                        "Cambodia",
+                        "Cameroon",
+                        "Canada",
+                        "Cape Verde",
+                        "Cayman Islands",
+                        "Chad",
+                        "Chile",
+                        "Christmas Island",
+                        "Cocos (Keeling) Islands",
+                        "Colombia",
+                        "Comoros",
+                        "Congo, Republic Of The",
+                        "Cook Islands",
+                        "Costa Rica",
+                        "Cote d'Ivoire",
+                        "Croatia",
+                        "Curacao",
+                        "Czech Republic",
+                        "Denmark",
+                        "Djibouti",
+                        "Dominica",
+                        "Dominican Republic",
+                        "Ecuador",
+                        "Egypt",
+                        "El Salvador",
+                        "Equatorial Guinea",
+                        "Estonia",
+                        "Ethiopia",
+                        "Falkland Islands (Malvinas)",
+                        "Faroe Islands",
+                        "Federated States Of Micronesia Micronesia",
+                        "Fiji",
+                        "Finland",
+                        "France",
+                        "French Guiana",
+                        "French Polynesia",
+                        "French Southern Territories",
+                        "Gabon",
+                        "Gambia",
+                        "Georgia",
+                        "Germany",
+                        "Ghana",
+                        "Gibraltar",
+                        "Greece",
+                        "Greenland",
+                        "Grenada",
+                        "Guadeloupe",
+                        "Guatemala",
+                        "Guernsey",
+                        "Guyana",
+                        "Heard Island And Mcdonald Islands",
+                        "Honduras",
+                        "HongKong",
+                        "Hungary",
+                        "Iceland",
+                        "India",
+                        "Indonesia",
+                        "Ireland",
+                        "Isle Of Man",
+                        "Israel",
+                        "Italy",
+                        "Jamaica",
+                        "Japan",
+                        "Jersey",
+                        "Jordan",
+                        "Kazakhstan",
+                        "Kenya",
+                        "Kiribati",
+                        "Korea, Republic Of",
+                        "Kosovo",
+                        "Kuwait",
+                        "Kyrgyzstan",
+                        "Laos",
+                        "Latvia",
+                        "Lesotho",
+                        "Liechtenstein",
+                        "Lithuania",
+                        "Luxembourg",
+                        "Macao",
+                        "Macedonia",
+                        "Madagascar",
+                        "Malawi",
+                        "Malaysia",
+                        "Maldives",
+                        "Malta",
+                        "Marshall Islands",
+                        "Martinique",
+                        "Mauritania",
+                        "Mauritius",
+                        "Mayotte",
+                        "Mexico",
+                        "Moldova",
+                        "Monaco",
+                        "Mongolia",
+                        "Montenegro",
+                        "Montserrat",
+                        "Morocco",
+                        "Mozambique",
+                        "Namibia",
+                        "Nauru",
+                        "Nepal",
+                        "Netherlands Antilles",
+                        "Netherlands",
+                        "New Caledonia",
+                        "New Zealand",
+                        "Niger",
+                        "Nigeria",
+                        "Niue",
+                        "Norfolk Island",
+                        "Norway",
+                        "Oman",
+                        "Pakistan",
+                        "Palau",
+                        "Palestinian Territory, Occupied",
+                        "Panama",
+                        "Papua New Guinea",
+                        "Paraguay",
+                        "Peru",
+                        "Pitcairn",
+                        "Poland",
+                        "Portugal",
+                        "The Commonwealth of Puerto Rico",
+                        "Qatar",
+                        "Reunion",
+                        "Romania",
+                        "Rwanda",
+                        "Russia",
+                        "Saint Barthelemy",
+                        "Saint Helena",
+                        "Saint Kitts And Nevis",
+                        "Saint Lucia",
+                        "Saint Martin",
+                        "Saint Pierre And Miquelon",
+                        "Saint Vincent And The Grenadines",
+                        "Samoa",
+                        "San Marino",
+                        "Sao Tome And Principe",
+                        "Saudi Arabia",
+                        "Senegal",
+                        "Serbia",
+                        "Seychelles",
+                        "Sint Maarten",
+                        "Sierra Leone",
+                        "Slovakia",
+                        "Slovenia",
+                        "Solomon Islands",
+                        "South Africa",
+                        "South Georgia And The South Sandwich Islands",
+                        "Spain",
+                        "Sri Lanka",
+                        "Suriname",
+                        "Svalbard And Jan Mayen",
+                        "Eswatini",
+                        "Sweden",
+                        "Switzerland",
+                        "Taiwan",
+                        "Tajikistan",
+                        "Tanzania, United Republic Of",
+                        "Thailand",
+                        "The Territory of Guam",
+                        "Timor",
+                        "Togo",
+                        "Tokelau",
+                        "Tonga",
+                        "Trinidad and Tobago",
+                        "Turkey",
+                        "Turkmenistan",
+                        "Turks And Caicos Islands",
+                        "Tuvalu",
+                        "Uganda",
+                        "United Arab Emirates",
+                        "United Kingdom",
+                        "Uruguay",
+                        "Uzbekistan",
+                        "Vanuatu",
+                        "Vatican City State",
+                        "Vietnam",
+                        "Virgin Islands, British",
+                        "Virgin Islands, US",
+                        "Wallis And Futuna",
+                        "Western Sahara",
+                        "Zambia",
+                    ]
+                },
+                {
+                    name: 'name',
+                    type: 'text',
+                    value: '',
+                    placeholder: '名字',
+                    validateTrigger: 'change',
+                    rules: [
+                        { required: true, message: '{label}是必填项。' },
+                        { pattern: /^[^0-9!@＠#$%^&＆？！：*().<>,\]\[}♂♀→←①②③④⑤⑥⑦⑧⑨⑩ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ☉卍卐★☆⊿※￥，。、;·ˉˇ〃¨÷×…‖∧∨√≠‘’≤≈≥〖〗↑↓±℉℃【】《》灬——“”；：{=+|?"`~_\\:]+$/, message: '{label}格式不正确。' },
+                    ],
+                    icons: {
+                        error: { src: 'https://www.puprime.com/wp-content/themes/puprime_new/images/live_error_icon.webp' },
+                    },
+                },
+                {
+                    name: 'email',
+                    type: 'text',
+                    value: '',
+                    placeholder: '电子邮件',
+                    validateTrigger: 'change',
+                    rules: [
+                        { required: true, message: '需要{label}。' },
+                        { pattern: /^(?!.*\.\.)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@([A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,7}$/, message: '{label}格式不正确。' },
+                    ],
+                    icons: {
+                        error: { src: 'https://www.puprime.com/wp-content/themes/puprime_new/images/live_error_icon.webp' },
+                    },
+                },
+                {
+                    type: 'group',
+                    fields: [
+                        {
+                            name: 'phone_code',
+                            type: 'select',
+                            value: '',
+                            width: '35%',
+                            dropdownWidth: '100%',  // 下拉面板宽度相对整个表单组
+                            validateTrigger: 'blur',
+                            placeholder: '代码',
+                            rules: {
+                                required: true,
+                                message: {
+                                    required: '代码不能为空。',
+                                }
+                            },
+                            options: [
+                                { label: '+86 中国', value: '86' },
+                                { label: '+1 美国', value: '1' },
+                                { label: '+1 加拿大', value: '1' },
+                                { label: '+7 俄罗斯', value: '7' },
+                                { label: '+30 希腊', value: '30' },
+                                { label: '+31 荷兰', value: '31' },
+                                { label: '+32 比利时', value: '32' },
+                                { label: '+33 法国', value: '33' },
+                                { label: '+34 西班牙', value: '34' },
+                                { label: '+36 匈牙利', value: '36' },
+                                { label: '+39 意大利', value: '39' },
+                                { label: '+41 瑞士', value: '41' },
+                                { label: '+43 奥地利', value: '43' },
+                                { label: '+44 英国', value: '44' },
+                                { label: '+45 丹麦', value: '45' },
+                                { label: '+46 瑞典', value: '46' },
+                                { label: '+47 挪威', value: '47' },
+                                { label: '+48 波兰', value: '48' },
+                                { label: '+49 德国', value: '49' },
+                                { label: '+52 墨西哥', value: '52' },
+                                { label: '+55 巴西', value: '55' },
+                                { label: '+60 马来西亚', value: '60' },
+                                { label: '+61 澳大利亚', value: '61' },
+                                { label: '+62 印度尼西亚', value: '62' },
+                                { label: '+63 菲律宾', value: '63' },
+                                { label: '+64 新西兰', value: '64' },
+                                { label: '+65 新加坡', value: '65' },
+                                { label: '+66 泰国', value: '66' },
+                                { label: '+81 日本', value: '81' },
+                                { label: '+82 韩国', value: '82' },
+                                { label: '+84 越南', value: '84' },
+                                { label: '+85 柬埔寨', value: '855' },
+                                { label: '+90 土耳其', value: '90' },
+                                { label: '+91 印度', value: '91' },
+                                { label: '+92 巴基斯坦', value: '92' },
+                                { label: '+94 斯里兰卡', value: '94' },
+                                { label: '+97 阿联酋', value: '971' },
+                                { label: '+98 伊朗', value: '98' },
+                                { label: '+351 葡萄牙', value: '351' },
+                                { label: '+358 芬兰', value: '358' },
+                                { label: '+380 乌克兰', value: '380' },
+                                { label: '+420 捷克', value: '420' },
+                                { label: '+65 中国澳门', value: '853' },
+                                { label: '+86 中国香港', value: '852' },
+                                { label: '+886 中国台湾', value: '886' },
+                            ],
+                        },
+                        {
+                            name: 'phone',
+                            type: 'text',
+                            value: '',
+                            width: '65%',
+                            validateTrigger: 'blur',
+                            icons: {
+                                clear: true,
+                                error: true,
+                            },
+                            rules: {
+                                required: true,
+                                pattern: /^\d{4,20}$/,
+                                message: {
+                                    required: '手机号码是必填项。',
+                                    pattern: '请输入正确的手机号码。',
+                                }
+                            },
+                        },
+                    ],
+                },
+                {
+                    name: 'password',
+                    type: 'text',
+                    value: '',
+                    placeholder: '密码（8-16个字符）',
+                    validateTrigger: 'blur',
+                    rules: [
+                        { required: true, message: '需要密码。' },
+                        { pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*.()])(?!.*['"‘’“”]).{8,16}$/, message: '请确保您的密码满足安全要求。' },
+                    ],
+                    icons: {
+                        passwordToggle: true,
+                        info: { icon: true, text: '您的密码必须为8-16个字符，并且需要包含字母（a-z 和 A-Z）、数字（0-9）以及特殊字符，如 !@#$%^&*()。', tooltipPosition: 'bottom', tooltipStyle: { background: '#1a73e8', color: '#fff', maxWidth: '179px' } },
+                        error: { src: 'https://www.puprime.com/wp-content/themes/puprime_new/images/live_error_icon.webp' },
+                    },
+                },
+            ]
+        })
+        document.getElementById('print').addEventListener('click', () => {
+            if (form.validate()) {
+                console.log('验证通过，表单值:', form.getValues());
+                alert('提交成功！');
+            } else {
+                console.log('验证失败，表单值:', form.getValues());
+                console.log('验证失败，错误信息:', form.getErrors());
+            }
+        });
+        const lis = document.querySelectorAll('.right_top_tab li');
+        lis.forEach((li, index) => {
+            li.onclick = function () {
+                lis.forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+
+                if (index === 0) {
+                    // document.querySelector('.pu_contact_right .top_live_form ul li.email').classList.add('active');
+                    // document.querySelector('.pu_contact_right .top_live_form ul li.phone_row').classList.remove('active');
+                } else if (index === 1) {
+                    // document.querySelector('.pu_contact_right .top_live_form ul li.email').classList.remove('active');
+                    // document.querySelector('.pu_contact_right .top_live_form ul li.phone_row').classList.add('active');
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
