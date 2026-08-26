@@ -311,7 +311,7 @@ rules: {
 | 键 | 类型 | 说明 |
 |---|---|---|
 | `error` | 图标配置 | 验证失败时显示错误图标，配合 `.form-field--error` 自动显隐 |
-| `info` | `string` 或 `{ icon, text, tooltipPosition }` | 提示图标；`string` 形式即 hover 提示文字；`{ icon: 图标配置, text: 'hover 提示', tooltipPosition: 'top' }` 可自定义图标、文字与提示框位置 |
+| `info` | `string` 或 `{ icon, text, tooltipPosition, tooltipStyle }` | 提示图标；`string` 形式即 hover 提示文字；`{ icon, text, tooltipPosition, tooltipStyle }` 可自定义图标、文字、位置和样式 |
 | `passwordToggle` | `boolean` | 仅对 `type: 'password'` 生效，显示/隐藏密码切换眼睛图标 |
 | `clear` | `boolean` | 一键清空；仅在字段有值时显示，值变化时自动显隐 |
 
@@ -355,9 +355,22 @@ info: '提示文字'
 
 // 完整配置
 info: { icon: true, text: '提示文字', tooltipPosition: 'bottom' }
+
+// 自定义样式
+info: {
+  text: '提示文字',
+  tooltipPosition: 'bottom',
+  tooltipStyle: {
+    background: '#1a73e8',
+    color: '#fff',
+    fontSize: '13px',
+  },
+}
 ```
 
-- 提示框带箭头指示器（CSS `::before` 三角形），方向与气泡位置一致。
+`tooltipStyle` 接受任意 CSS 属性的 camelCase 形式，通过 `Object.assign` 应用到 tooltip 元素的 inline style。设置 `background` 或 `backgroundColor` 时，箭头颜色自动跟随。
+
+- 提示框带箭头指示器，方向与气泡位置一致。
 - 自动边界检测：hover 时若首选方向会导致提示框被窗口截断，会自动按优先级切换到可用方向（top → bottom → left → right），离开鼠标后恢复首选方向。
 
 **布局细节：**

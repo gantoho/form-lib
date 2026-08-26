@@ -9,6 +9,7 @@
     <style>
         body {
             min-height: 2000px;
+            background-color: #FFFFFF;
         }
         .container {
             max-width: 600px;
@@ -65,8 +66,9 @@
                     validateTrigger: 'input',  // 输入时实时验证
                     icons: {
                         passwordToggle: true,  // 显示/隐藏密码切换
-                        info: { icon: true, text: '长度 6-20 位，建议包含字母和数字', tooltipPosition: 'bottom' },
+                        info: { icon: true, text: 'Your password must be between 8-16 characters and a mix of letters (a-z and A-Z), numbers (0-9), and special characters like !@#$%^&*().', tooltipPosition: 'bottom', tooltipStyle: { background: '#1a73e8', color: '#fff', maxWidth: '179px' } },
                         clear: true,
+                        error: true,
                     },
                     rules: {
                         required: true,
@@ -84,6 +86,7 @@
                     label: '邮箱',
                     type: 'text',
                     value: '',
+                    placeholder: '输入您的邮箱地址',
                     validateTrigger: 'blur',  // 失去焦点时验证
                     rules: {
                         required: true,
@@ -239,6 +242,7 @@
                 console.log('验证通过，表单值:', form.getValues());
                 alert('提交成功！');
             } else {
+                console.log('验证失败，表单值:', form.getValues());
                 console.log('验证失败，错误信息:', form.getErrors());
             }
         });
