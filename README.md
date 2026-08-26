@@ -368,10 +368,12 @@ info: {
 }
 ```
 
-`tooltipStyle` 接受任意 CSS 属性的 camelCase 形式，通过 `Object.assign` 应用到 tooltip 元素的 inline style。设置 `background` 或 `backgroundColor` 时，箭头颜色自动跟随。
+`tooltipStyle` 接受任意 CSS 属性的 camelCase 形式。设置 `background` 或 `backgroundColor` 时，通过 CSS 变量 `--tt-bg` 传递，箭头颜色自动跟随。
 
 - 提示框带箭头指示器，方向与气泡位置一致。
-- 自动边界检测：hover 时若首选方向会导致提示框被窗口截断，会自动按优先级切换到可用方向（top → bottom → left → right），离开鼠标后恢复首选方向。
+- 自动边界检测：渲染后立即根据视口空间计算最优方向，按优先级选择可用方向（top → bottom → left → right）；若所有方向空间不足，选最大可用方向并自动约束宽度。窗口 resize 时自动重算。
+- 若首选方向空间不足，tooltip 会自动约束 max-width 以适配可用空间；max-width 预留 18px 余量（padding + border + arrow）。
+- 方向确定后，下一帧用 `getBoundingClientRect()` 实际测量边界，超出时通过 `translate()` 微调，确保 tooltip 始终在视口内完整展示。
 
 **布局细节：**
 
@@ -543,6 +545,9 @@ form.setValues({ username: 'admin', role: 'admin' });
 | `.form-field__icon--toggle` / `--password-on` / `--password-off` | Element | 密码显示/隐藏切换图标 |
 | `.form-field__icon--clear` | Element | 清空图标（仅在有值时显示） |
 | `.form-field__icon--arrow` | Element | 下拉箭头（select 自动追加） |
+| `.form-field__tooltip` | Element | 提示框气泡容器（`.form-field__icon--info` 的子元素） |
+| `.form-field__tooltip-arrow` | Element | 提示框箭头（`.form-field__tooltip` 的子元素） |
+| `.form-field__tooltip--top` / `--bottom` / `--left` / `--right` | Modifier | 提示框方向变体 |
 | `.form-field__control--icons-{n}` | Modifier | 图标数量为 n 时，控件预留对应右侧内边距 |
 
 ### 错误样式
