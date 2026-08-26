@@ -377,7 +377,8 @@ info: {
 
 **布局细节：**
 
-- 图标组在控件右侧垂直居中；控件会根据图标数量自动预留右侧内边距（`.form-field__control--icons-1/2/3` → `padding-right: 34/52/70px`），避免文字与图标重叠。
+- 控件容器 `.form-field__control` 采用 flex 布局，承载边框、圆角、背景色；控件（input/textarea/select）无边框、透明背景，自动填充剩余空间（`flex: 1; min-width: 0`）；图标组 `.form-field__icons` 固定在右侧（`flex-shrink: 0; margin-right: 8px`）。
+- 容器通过 `:focus-within` 响应焦点高亮；错误状态下容器边框变红（`.form-field--error .form-field__control`）。
 - 错误图标默认隐藏，字段进入 `.form-field--error` 状态（验证失败）时显示。
 - 密码切换、清空图标带点击反馈（`cursor: pointer`）；错误、箭头、提示图标为只读。
 - 清空对 input/textarea/搜索模式下拉直接清空；对非搜索模式的自定义下拉会复位选中状态。
@@ -548,17 +549,16 @@ form.setValues({ username: 'admin', role: 'admin' });
 | `.form-field__tooltip` | Element | 提示框气泡容器（`.form-field__icon--info` 的子元素） |
 | `.form-field__tooltip-arrow` | Element | 提示框箭头（`.form-field__tooltip` 的子元素） |
 | `.form-field__tooltip--top` / `--bottom` / `--left` / `--right` | Modifier | 提示框方向变体 |
-| `.form-field__control--icons-{n}` | Modifier | 图标数量为 n 时，控件预留对应右侧内边距 |
 
 ### 错误样式
 
-- `.form-field--error .form-field__input / __textarea / .select__trigger`：错误状态下边框变红。
-- 焦点时 `.form-field--error` 下 outline 变红。
+- `.form-field--error .form-field__control`：错误状态下容器边框变红。
+- `.form-field--error .form-field__control:focus-within`：错误状态下焦点 outline 变红。
 - 必填星号 `.form-field__required`：`#ff4d4f`。
 
 ### 布局要点
 
 - `.select__dropdown`：`position: absolute`，相对 `.select` 定位，展开时 `display: block`。
 - 分组内字段默认 `flex: 1` 均分；设置 `width` 后转为 `flex: auto`（basis 采用 width）。
-- 三种控件（div trigger、input trigger、普通 input/textarea）已统一 `font-family: inherit`、`line-height: 1.5`、`box-sizing: border-box`、`padding: 8px 12px`、`border: 1px`，保证高度一致。
+- 三种控件（div trigger、input trigger、普通 input/textarea）已统一 `font-family: inherit`、`line-height: 1.5`、`box-sizing: border-box`、`padding: 8px 12px`，保证高度一致；边框、圆角、背景色由容器 `.form-field__control` 统一承载。
 ```
