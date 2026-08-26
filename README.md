@@ -14,17 +14,23 @@
 - [Form 构造参数](#form-构造参数)
 - [字段配置](#字段配置)
   - [type](#type)
+  - [label — 字段标签](#label--字段标签)
+  - [className — 自定义类名](#classname--自定义类名)
   - [width — 字段宽度](#width--字段宽度)
   - [placeholder — 占位提示](#placeholder--占位提示)
   - [validateTrigger — 验证触发方式](#validatetrigger--验证触发方式)
   - [rules — 验证规则](#rules--验证规则)
   - [options — 下拉选项](#options--下拉选项)
+  - [displayField — 选中显示字段](#displayfield--选中显示字段)
   - [searchable — 可搜索下拉](#searchable--可搜索下拉)
   - [dropdownWidth — 下拉面板宽度](#dropdownwidth--下拉面板宽度)
   - [icons — 图标组](#icons--图标组)
+  - [when — 条件显示](#when--条件显示)
+  - [linkage — 字段联动](#linkage--字段联动)
 - [字段分组 group](#字段分组-group)
 - [错误提示与模板变量](#错误提示与模板变量)
 - [errorDisplay — 错误显示模式](#errordisplay--错误显示模式)
+- [hiddenFieldStrategy — 隐藏字段策略](#hiddenfieldstrategy--隐藏字段策略)
 - [实例方法](#实例方法)
 - [样式与 BEM 类名](#样式与-bem-类名)
 
@@ -82,14 +88,16 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 |---|---|---|---|
-| `container` | `HTMLElement` | **必填** | 表单渲染挂载的 DOM 节点 |
+| `container` | `HTMLElement` \| `string` | **必填** | 表单渲染挂载的 DOM 节点，支持 CSS 选择器字符串（如 `'#app'`、`'.container'`） |
 | `fields` | `Field[]` | **必填** | 字段配置数组，见下方 [字段配置](#字段配置) |
 | `errorDisplay` | `string` | `'auto'` | 错误提示的显示模式，见 [errorDisplay](#errordisplay--错误显示模式) |
+| `hiddenFieldStrategy` | `string` | `'exclude'` | 隐藏字段的值处理策略，见 [hiddenFieldStrategy](#hiddenfieldstrategy--隐藏字段策略) |
 
 ```javascript
 const form = new Form({
-    container: document.getElementById('app'),
+    container: '#app',  // 支持 CSS 选择器
     errorDisplay: 'auto',
+    hiddenFieldStrategy: 'exclude',
     fields: [
         { name: 'username', label: '用户名', type: 'text' },
     ],
@@ -107,17 +115,21 @@ const form = new Form({
 | 属性 | 类型 | 默认值 | 适用范围 | 说明 |
 |---|---|---|---|---|
 | `name` | `string` | **必填** | 全部 | 字段唯一标识，也是表单值的 key；同时用于生成类名 `form-field--{name}` |
-| `label` | `string` |  | 全部 | 字段标签文字 |
+| `label` | `string` |  | 全部 | 字段标签文字，见 [label](#label--字段标签) |
+| `className` | `string` |  | 全部 | 自定义 CSS 类名，见 [className](#classname--自定义类名) |
 | `type` | `string` | `'text'` | 全部 | 字段控件类型，见 [type](#type) |
 | `value` | `any` | `''` | 全部 | 初始值 |
 | `placeholder` | `string` | `''` | text/password/textarea/select(搜索模式) | 占位提示文字，见 [placeholder](#placeholder--占位提示) |
 | `width` | `string` |  | 全部 | 字段宽度，如 `'100%'`、`'35%'`，见 [width](#width--字段宽度) |
 | `validateTrigger` | `string` | `'blur'` | 全部 | 验证触发方式，见 [validateTrigger](#validatetrigger--验证触发方式) |
-| `rules` | `object` |  | 非 group | 验证规则，见 [rules](#rules--验证规则) |
+| `rules` | `object` \| `array` |  | 非 group | 验证规则，见 [rules](#rules--验证规则) |
 | `options` | `array` | `[]` | select | 下拉选项数组，见 [options](#options--下拉选项) |
+| `displayField` | `string` | `'label'` | select | 选中后显示的字段，见 [displayField](#displayfield--选中显示字段) |
 | `searchable` | `boolean` | `false` | select | 是否可搜索，见 [searchable](#searchable--可搜索下拉) |
 | `dropdownWidth` | `string` |  | select(组内) | 下拉面板宽度相对所在组的百分比，见 [dropdownWidth](#dropdownwidth--下拉面板宽度) |
 | `icons` | `object` |  | 非 group | 右侧图标组配置，见 [icons](#icons--图标组) |
+| `when` | `function` |  | 全部 | 条件显示，见 [when](#when--条件显示) |
+| `linkage` | `object` |  | 全部 | 字段联动，见 [linkage](#linkage--字段联动) |
 
 ### type
 
@@ -130,6 +142,47 @@ const form = new Form({
 | `'group'` | 分组容器 | 用于字段同组同行布局，见 [字段分组 group](#字段分组-group) |
 
 `type` 为除上述之外的任意值时，均按 `'text'` 处理。
+
+### label — 字段标签
+
+字段标签文字，显示在输入框上方。**可选**，不配置则不渲染 label 标签。
+
+```javascript
+// 配置 label
+{ name: 'username', label: '用户名', type: 'text' }
+
+// 不配置 label，不渲染标签
+{ name: 'email', type: 'text', placeholder: '电子邮件' }
+```
+
+配置 `label` 时：
+- 渲染 `<label>` 标签，`for` 属性指向字段 `name`
+- 验证规则中 `{label}` 模板变量会替换为 `label` 值
+- 若 `label` 未配置，`{label}` 会 fallback 到 `placeholder` 或 `name`
+
+### className — 自定义类名
+
+为字段容器添加自定义 CSS 类名，方便样式控制或 JavaScript 选择。
+
+```javascript
+{
+    name: 'email',
+    type: 'text',
+    className: 'email-field',
+    // 渲染后：<div class="form-field form-field--email email-field">
+}
+```
+
+分组同样支持：
+
+```javascript
+{
+    type: 'group',
+    className: 'phone-group',
+    fields: [...],
+    // 渲染后：<div class="form-group phone-group">
+}
+```
 
 ### width — 字段宽度
 
@@ -207,6 +260,8 @@ const form = new Form({
 
 字段级验证配置。未配置 `rules`（或为 `undefined`）的字段不参与验证，始终视为通过。
 
+**对象格式（推荐）：**
+
 ```javascript
 rules: {
     required: true,
@@ -217,6 +272,18 @@ rules: {
     message: { /* 或字符串 */ },
 }
 ```
+
+**数组格式：**
+
+```javascript
+rules: [
+    { required: true, message: '请输入{label}' },
+    { minLength: 3, message: '{label}长度不能少于{minLength}个字符' },
+    { pattern: '^[a-zA-Z0-9_]+$', message: '{label}格式不正确' },
+]
+```
+
+数组格式会自动转换为对象格式，每项的 `message` 会映射到对应规则的 `message` 中。
 
 | 规则 | 类型 | 说明 |
 |---|---|---|
@@ -231,7 +298,9 @@ rules: {
 
 ### options — 下拉选项
 
-`select` 字段的下拉选项数组，每项为 `{ label, value }`：
+`select` 字段的下拉选项数组，支持两种格式：
+
+**对象数组（推荐）：**
 
 ```javascript
 {
@@ -249,7 +318,45 @@ rules: {
 | `label` | 选项展示文本 |
 | `value` | 选项的实际值，选中后写入 `form.values[name]` |
 
+**字符串数组：**
+
+```javascript
+{
+    name: 'country', label: '国家', type: 'select', value: '',
+    options: ['中国', '美国', '日本', '韩国'],
+    // 自动转换为：[{ label: '中国', value: '中国' }, ...]
+}
+```
+
+字符串数组会自动转换为 `{ label, value }` 格式，`label` 和 `value` 相同。
+
+**select 验证：**
+
+配置 `rules` 后，select 会自动验证选中的值是否在 `options` 中。若值不在可选范围内，会显示错误提示（默认：`'{label}的值不在可选范围内'`）。
+
 未配置 `options` 时下拉无选项。
+
+### displayField — 选中显示字段
+
+控制 select 选中后触发框显示的是 `label` 还是 `value`。默认显示 `label`。
+
+```javascript
+{
+    name: 'phone_code', label: '区号', type: 'select',
+    displayField: 'value',  // 选中后显示 value（如 '86'）
+    options: [
+        { label: '+86 中国', value: '86' },
+        { label: '+1 美国', value: '1' },
+    ],
+}
+```
+
+| 值 | 说明 |
+|---|---|
+| `'label'`（默认） | 选中后显示 `label`（如 `'+86 中国'`） |
+| `'value'` | 选中后显示 `value`（如 `'86'`） |
+
+适用于需要显示简短值而非完整描述的场景。
 
 ### searchable — 可搜索下拉
 
@@ -385,6 +492,101 @@ info: {
 
 ---
 
+### when — 条件显示
+
+根据条件动态显示或隐藏字段。`when` 是一个函数，接收当前表单值和容器元素，返回 `true` 显示字段，`false` 隐藏字段。
+
+```javascript
+{
+    name: 'email',
+    type: 'text',
+    when: (values, root) => {
+        // 根据某个容器的 class 决定是否显示
+        return root.querySelector('.email-container')?.classList.contains('active') ?? false;
+    },
+}
+```
+
+**函数参数：**
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `values` | `object` | 当前所有表单值的拷贝 |
+| `root` | `HTMLElement` | 表单容器元素（`container`） |
+
+**行为说明：**
+
+- 初始渲染时立即评估 `when` 条件，决定字段是否可见
+- 任何字段值变化时，自动重新评估所有 `when` 条件
+- 隐藏的字段默认不参与验证、不包含在 `getValues()` 返回值中（可通过 `hiddenFieldStrategy` 配置）
+- 隐藏时自动清除该字段的错误提示
+- 分组（`type: 'group'`）同样支持 `when` 条件
+
+**配合 hiddenFieldStrategy：**
+
+```javascript
+const form = new Form({
+    container: '#app',
+    hiddenFieldStrategy: 'preserve', // 隐藏字段保留值
+    fields: [...],
+});
+```
+
+### linkage — 字段联动
+
+实现字段之间的联动关系，当一个字段值变化时自动更新另一个字段的值。保持解耦合设计，每个字段只声明自己监听什么、如何响应。
+
+```javascript
+{
+    name: 'phone_code',
+    type: 'select',
+    linkage: {
+        watch: 'country',  // 监听的字段名
+        handler: (countryValue, allValues, field) => {
+            // countryValue: 被监听字段的当前值
+            // allValues: 所有表单值
+            // field: 当前字段配置（可访问 options 等）
+            const options = field.options || [];
+            const found = options.find(opt => opt.label === countryValue);
+            return found ? found.value : undefined; // 返回新值，undefined 表示不更新
+        }
+    },
+    options: [
+        { label: '中国', value: '86' },
+        { label: '美国', value: '1' },
+    ],
+}
+```
+
+**linkage 配置：**
+
+| 属性 | 类型 | 说明 |
+|---|---|---|
+| `watch` | `string` \| `string[]` | 监听的字段名，支持单个或多个字段 |
+| `handler` | `function` | 联动处理函数，返回新值 |
+
+**handler 函数参数：**
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `changedValue` | `any` | 被监听字段变化后的值 |
+| `allValues` | `object` | 所有表单值的拷贝 |
+| `field` | `object` | 当前字段配置（可访问 `options`、`name` 等） |
+
+**返回值：**
+- 返回新值：更新当前字段的值并刷新 UI
+- 返回 `undefined`：不更新
+
+**行为说明：**
+
+- 监听字段值变化时自动触发联动
+- 联动更新会自动刷新 select 的显示文本（考虑 `displayField` 配置）
+- 联动更新后自动清除目标字段的错误提示
+- 支持单向联动（A → B），不会形成循环依赖
+- 分组内的字段同样支持联动
+
+---
+
 ## 字段分组 group
 
 `type: 'group'` 用于把多个字段放在同一行（flex 横向排列）。
@@ -404,6 +606,8 @@ info: {
 |---|---|---|
 | `type` | `string` | 固定为 `'group'` |
 | `label` | `string` | 可选，分组标签 |
+| `className` | `string` | 可选，自定义 CSS 类名 |
+| `when` | `function` | 可选，条件显示，见 [when](#when--条件显示) |
 | `fields` | `Field[]` | 组内字段数组，可递归包含 `group`（支持嵌套） |
 
 **行为细节：**
@@ -454,7 +658,10 @@ rules: {
 | `minLength` | `{label}长度不能少于{minLength}个字符` |
 | `maxLength` | `{label}长度不能超过{maxLength}个字符` |
 | `pattern` | `{label}格式不正确` |
+| `options`（select） | `{label}的值不在可选范围内` |
 | `validator` | 使用验证函数返回的字符串（无默认文案） |
+
+> select 类型字段会自动验证值是否在 `options` 中，可通过 `message.options` 自定义错误提示。
 
 **支持的模板变量：**
 
@@ -490,17 +697,55 @@ const form = new Form({
 
 ---
 
+## hiddenFieldStrategy — 隐藏字段策略
+
+控制通过 `when` 条件隐藏的字段在 `getValues()` 中的处理方式。通过 `new Form` 的 `hiddenFieldStrategy` 选项配置。
+
+| 值 | 行为 |
+|---|---|
+| `'exclude'`（默认） | 隐藏字段不包含在 `getValues()` 返回值中 |
+| `'empty'` | 隐藏字段包含在返回值中，但值为空字符串 `''` |
+| `'preserve'` | 隐藏字段包含在返回值中，保留原值 |
+
+```javascript
+const form = new Form({
+    container: '#app',
+    hiddenFieldStrategy: 'preserve', // 隐藏字段保留原值
+    fields: [
+        {
+            name: 'email',
+            type: 'text',
+            when: (values, root) => root.dataset.activeTab === 'email',
+        },
+        {
+            name: 'phone',
+            type: 'text',
+            when: (values, root) => root.dataset.activeTab === 'phone',
+        },
+    ],
+});
+
+// 假设 email 值为 'test@example.com'，phone 值为 '13800138000'
+// 当 email 字段隐藏时：
+// - 'exclude': getValues() => { phone: '13800138000' }
+// - 'empty':   getValues() => { email: '', phone: '13800138000' }
+// - 'preserve': getValues() => { email: 'test@example.com', phone: '13800138000' }
+```
+
+---
+
 ## 实例方法
 
 创建 `const form = new Form(config)` 后可调用以下方法：
 
 | 方法 | 返回值 | 说明 |
 |---|---|---|
-| `validate()` | `boolean` | 验证所有字段（含分组内字段），返回是否全部通过 |
+| `validate()` | `boolean` | 验证所有**可见**字段（含分组内字段），返回是否全部通过。隐藏字段（`when` 条件为 `false`）不参与验证 |
 | `validateField(fieldName)` | `boolean` | 验证指定字段（支持分组内字段，通过 `name` 查找） |
 | `getErrors()` | `object` | 返回当前错误信息对象拷贝 `{ fieldName: message }` |
-| `getValues()` | `object` | 返回表单全部值拷贝 `{ fieldName: value }` |
+| `getValues()` | `object` | 返回表单值拷贝，隐藏字段的处理取决于 `hiddenFieldStrategy` 配置 |
 | `setValues(newValues)` | — | 合并设置若干字段值并重新渲染表单 |
+| `_evaluateWhenConditions()` | — | 手动触发所有 `when` 条件重新评估（通常自动触发，外部状态变化时需要手动调用） |
 
 ```javascript
 form.validate();                 // true / false
@@ -508,6 +753,10 @@ form.validateField('username');  // true / false
 form.getErrors();                // { username: '用户名不能为空' }
 form.getValues();                // { username: 'admin', role: 'user' }
 form.setValues({ username: 'admin', role: 'admin' });
+
+// 外部状态变化时，手动触发 when 条件评估
+document.getElementById('tab-container').dataset.activeTab = 'phone';
+form._evaluateWhenConditions();
 ```
 
 ---

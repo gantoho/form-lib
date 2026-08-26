@@ -65,31 +65,29 @@
             left: calc(50% + 2px);
         }
 
-        .top_live_form ul li.email,
-        .top_live_form ul li.phone_row {
-            display: none;
-        }
-
-        .top_live_form ul li.email.active,
-        .top_live_form ul li.phone_row.active {
-            display: block;
+        /* Tab 切换容器样式 */
+        .tab-container {
+            max-width: 600px;
         }
     </style>
 </head>
 
 <body>
-    <ul class="right_top_tab">
-        <li class="email_tab to_strong active"><a href="javascript:;">Email Address</a></li>
-        <li class="phone_tab to_strong"><a href="javascript:;">Phone Number</a></li>
-        <i></i>
-    </ul>
-    <div id="app"></div>
-    <button id="print">提交表单</button>
+    <div id="tab-container" class="tab-container" data-active-tab="email">
+        <ul class="right_top_tab">
+            <li class="email_tab to_strong active"><a href="javascript:;">Email Address</a></li>
+            <li class="phone_tab to_strong"><a href="javascript:;">Phone Number</a></li>
+            <i></i>
+        </ul>
+        <div id="app"></div>
+        <button id="print">提交表单</button>
+    </div>
 
     <script src="lib/form.js"></script>
     <script>
         const form = new Form({
             container: '#app',
+            hiddenFieldStrategy: 'preserve',
             fields: [
                 {
                     name: 'country',
@@ -341,6 +339,10 @@
                     value: '',
                     placeholder: '电子邮件',
                     validateTrigger: 'change',
+                    when: (_values, root) => {
+                        const container = root.closest('#tab-container') || document.getElementById('tab-container');
+                        return container?.dataset.activeTab === 'email';
+                    },
                     rules: [
                         { required: true, message: '需要{label}。' },
                         { pattern: /^(?!.*\.\.)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@([A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,7}$/, message: '{label}格式不正确。' },
@@ -351,6 +353,10 @@
                 },
                 {
                     type: 'group',
+                    when: (_values, root) => {
+                        const container = root.closest('#tab-container') || document.getElementById('tab-container');
+                        return container?.dataset.activeTab === 'phone';
+                    },
                     fields: [
                         {
                             name: 'phone_code',
@@ -360,58 +366,237 @@
                             dropdownWidth: '100%',  // 下拉面板宽度相对整个表单组
                             validateTrigger: 'blur',
                             placeholder: '代码',
+                            displayField: 'value',
                             rules: {
                                 required: true,
                                 message: {
                                     required: '代码不能为空。',
                                 }
                             },
+                            linkage: {
+                                watch: 'country',
+                                handler: (countryValue, allValues, field) => {
+                                    // 根据国家名称找到对应的电话区号
+                                    const options = field.options || [];
+                                    const found = options.find(opt => opt.label === countryValue);
+                                    return found ? found.value : allValues.phone_code;
+                                }
+                            },
                             options: [
-                                { label: '+86 中国', value: '86' },
-                                { label: '+1 美国', value: '1' },
-                                { label: '+1 加拿大', value: '1' },
-                                { label: '+7 俄罗斯', value: '7' },
-                                { label: '+30 希腊', value: '30' },
-                                { label: '+31 荷兰', value: '31' },
-                                { label: '+32 比利时', value: '32' },
-                                { label: '+33 法国', value: '33' },
-                                { label: '+34 西班牙', value: '34' },
-                                { label: '+36 匈牙利', value: '36' },
-                                { label: '+39 意大利', value: '39' },
-                                { label: '+41 瑞士', value: '41' },
-                                { label: '+43 奥地利', value: '43' },
-                                { label: '+44 英国', value: '44' },
-                                { label: '+45 丹麦', value: '45' },
-                                { label: '+46 瑞典', value: '46' },
-                                { label: '+47 挪威', value: '47' },
-                                { label: '+48 波兰', value: '48' },
-                                { label: '+49 德国', value: '49' },
-                                { label: '+52 墨西哥', value: '52' },
-                                { label: '+55 巴西', value: '55' },
-                                { label: '+60 马来西亚', value: '60' },
-                                { label: '+61 澳大利亚', value: '61' },
-                                { label: '+62 印度尼西亚', value: '62' },
-                                { label: '+63 菲律宾', value: '63' },
-                                { label: '+64 新西兰', value: '64' },
-                                { label: '+65 新加坡', value: '65' },
-                                { label: '+66 泰国', value: '66' },
-                                { label: '+81 日本', value: '81' },
-                                { label: '+82 韩国', value: '82' },
-                                { label: '+84 越南', value: '84' },
-                                { label: '+85 柬埔寨', value: '855' },
-                                { label: '+90 土耳其', value: '90' },
-                                { label: '+91 印度', value: '91' },
-                                { label: '+92 巴基斯坦', value: '92' },
-                                { label: '+94 斯里兰卡', value: '94' },
-                                { label: '+97 阿联酋', value: '971' },
-                                { label: '+98 伊朗', value: '98' },
-                                { label: '+351 葡萄牙', value: '351' },
-                                { label: '+358 芬兰', value: '358' },
-                                { label: '+380 乌克兰', value: '380' },
-                                { label: '+420 捷克', value: '420' },
-                                { label: '+65 中国澳门', value: '853' },
-                                { label: '+86 中国香港', value: '852' },
-                                { label: '+886 中国台湾', value: '886' },
+                                { label: 'Aland Islands', value: '358' },
+                                { label: 'Albania', value: '355' },
+                                { label: 'Algeria', value: '213' },
+                                { label: 'Andorra', value: '376' },
+                                { label: 'Angola', value: '244' },
+                                { label: 'Anguilla', value: '1264' },
+                                { label: 'Antarctica', value: '672' },
+                                { label: 'Antigua And Barbuda', value: '1268' },
+                                { label: 'Argentina', value: '54' },
+                                { label: 'Armenia', value: '374' },
+                                { label: 'Aruba', value: '297' },
+                                { label: 'Austria', value: '43' },
+                                { label: 'Azerbaijan', value: '994' },
+                                { label: 'Bahamas', value: '1242' },
+                                { label: 'Bahrain', value: '973' },
+                                { label: 'Bangladesh', value: '880' },
+                                { label: 'Barbados', value: '1246' },
+                                { label: 'Belgium', value: '32' },
+                                { label: 'Belize', value: '501' },
+                                { label: 'Benin', value: '229' },
+                                { label: 'Bermuda', value: '1441' },
+                                { label: 'Bhutan', value: '975' },
+                                { label: 'Bolivia', value: '591' },
+                                { label: 'Botswana', value: '267' },
+                                { label: 'Bouvet Island', value: '147' },
+                                { label: 'Bosnia And Herzegovina', value: '387' },
+                                { label: 'Brazil', value: '55' },
+                                { label: 'British Indian Ocean Territory', value: '246' },
+                                { label: 'Brunei Darussalam', value: '673' },
+                                { label: 'Bulgaria', value: '359' },
+                                { label: 'Burkina Faso', value: '226' },
+                                { label: 'Belarus', value: '375' },
+                                { label: 'Cambodia', value: '855' },
+                                { label: 'Cameroon', value: '237' },
+                                { label: 'Canada', value: '1' },
+                                { label: 'Cape Verde', value: '238' },
+                                { label: 'Cayman Islands', value: '1345' },
+                                { label: 'Chad', value: '235' },
+                                { label: 'Chile', value: '56' },
+                                { label: 'Christmas Island', value: '61' },
+                                { label: 'Cocos (Keeling) Islands', value: '61' },
+                                { label: 'Colombia', value: '57' },
+                                { label: 'Comoros', value: '269' },
+                                { label: 'Congo, Republic Of The', value: '242' },
+                                { label: 'Cook Islands', value: '682' },
+                                { label: 'Costa Rica', value: '506' },
+                                { label: 'Cote d\'Ivoire', value: '225' },
+                                { label: 'Croatia', value: '385' },
+                                { label: 'Curacao', value: '599' },
+                                { label: 'Czech Republic', value: '420' },
+                                { label: 'Denmark', value: '45' },
+                                { label: 'Djibouti', value: '253' },
+                                { label: 'Dominica', value: '1767' },
+                                { label: 'Dominican Republic', value: '1809' },
+                                { label: 'Ecuador', value: '593' },
+                                { label: 'Egypt', value: '20' },
+                                { label: 'El Salvador', value: '503' },
+                                { label: 'Equatorial Guinea', value: '240' },
+                                { label: 'Estonia', value: '372' },
+                                { label: 'Ethiopia', value: '251' },
+                                { label: 'Falkland Islands (Malvinas)', value: '500' },
+                                { label: 'Faroe Islands', value: '298' },
+                                { label: 'Federated States Of Micronesia Micronesia', value: '691' },
+                                { label: 'Fiji', value: '679' },
+                                { label: 'Finland', value: '358' },
+                                { label: 'France', value: '33' },
+                                { label: 'French Guiana', value: '594' },
+                                { label: 'French Polynesia', value: '689' },
+                                { label: 'French Southern Territories', value: '262' },
+                                { label: 'Gabon', value: '241' },
+                                { label: 'Gambia', value: '220' },
+                                { label: 'Georgia', value: '995' },
+                                { label: 'Germany', value: '49' },
+                                { label: 'Ghana', value: '233' },
+                                { label: 'Gibraltar', value: '350' },
+                                { label: 'Greece', value: '30' },
+                                { label: 'Greenland', value: '299' },
+                                { label: 'Grenada', value: '1473' },
+                                { label: 'Guadeloupe', value: '590' },
+                                { label: 'Guatemala', value: '502' },
+                                { label: 'Guernsey', value: '44' },
+                                { label: 'Guyana', value: '592' },
+                                { label: 'Heard Island And Mcdonald Islands', value: '11' },
+                                { label: 'Honduras', value: '504' },
+                                { label: 'HongKong', value: '852' },
+                                { label: 'Hungary', value: '36' },
+                                { label: 'Iceland', value: '354' },
+                                { label: 'India', value: '91' },
+                                { label: 'Indonesia', value: '62' },
+                                { label: 'Ireland', value: '353' },
+                                { label: 'Isle Of Man', value: '44' },
+                                { label: 'Israel', value: '972' },
+                                { label: 'Italy', value: '39' },
+                                { label: 'Jamaica', value: '1876' },
+                                { label: 'Japan', value: '81' },
+                                { label: 'Jersey', value: '44' },
+                                { label: 'Jordan', value: '962' },
+                                { label: 'Kazakhstan', value: '77' },
+                                { label: 'Kenya', value: '254' },
+                                { label: 'Kiribati', value: '686' },
+                                { label: 'Korea, Republic Of', value: '82' },
+                                { label: 'Kosovo', value: '383' },
+                                { label: 'Kuwait', value: '965' },
+                                { label: 'Kyrgyzstan', value: '996' },
+                                { label: 'Laos', value: '856' },
+                                { label: 'Latvia', value: '371' },
+                                { label: 'Lesotho', value: '266' },
+                                { label: 'Liechtenstein', value: '423' },
+                                { label: 'Lithuania', value: '370' },
+                                { label: 'Luxembourg', value: '352' },
+                                { label: 'Macao', value: '853' },
+                                { label: 'Macedonia', value: '389' },
+                                { label: 'Madagascar', value: '261' },
+                                { label: 'Malawi', value: '265' },
+                                { label: 'Malaysia', value: '60' },
+                                { label: 'Maldives', value: '960' },
+                                { label: 'Malta', value: '356' },
+                                { label: 'Marshall Islands', value: '692' },
+                                { label: 'Martinique', value: '596' },
+                                { label: 'Mauritania', value: '222' },
+                                { label: 'Mauritius', value: '230' },
+                                { label: 'Mayotte', value: '262' },
+                                { label: 'Mexico', value: '52' },
+                                { label: 'Moldova', value: '373' },
+                                { label: 'Monaco', value: '377' },
+                                { label: 'Mongolia', value: '976' },
+                                { label: 'Montenegro', value: '382' },
+                                { label: 'Montserrat', value: '1664' },
+                                { label: 'Morocco', value: '212' },
+                                { label: 'Mozambique', value: '258' },
+                                { label: 'Namibia', value: '264' },
+                                { label: 'Nauru', value: '674' },
+                                { label: 'Nepal', value: '977' },
+                                { label: 'Netherlands Antilles', value: '599' },
+                                { label: 'Netherlands', value: '31' },
+                                { label: 'New Caledonia', value: '687' },
+                                { label: 'New Zealand', value: '64' },
+                                { label: 'Niger', value: '227' },
+                                { label: 'Nigeria', value: '234' },
+                                { label: 'Niue', value: '683' },
+                                { label: 'Norfolk Island', value: '672' },
+                                { label: 'Norway', value: '47' },
+                                { label: 'Oman', value: '968' },
+                                { label: 'Pakistan', value: '92' },
+                                { label: 'Palau', value: '680' },
+                                { label: 'Palestinian Territory, Occupied', value: '970' },
+                                { label: 'Panama', value: '507' },
+                                { label: 'Papua New Guinea', value: '675' },
+                                { label: 'Paraguay', value: '595' },
+                                { label: 'Peru', value: '51' },
+                                { label: 'Pitcairn', value: '64' },
+                                { label: 'Poland', value: '48' },
+                                { label: 'Portugal', value: '351' },
+                                { label: 'The Commonwealth of Puerto Rico', value: '1939' },
+                                { label: 'Qatar', value: '974' },
+                                { label: 'Reunion', value: '262' },
+                                { label: 'Romania', value: '40' },
+                                { label: 'Rwanda', value: '250' },
+                                { label: 'Russia', value: '7' },
+                                { label: 'Saint Barthelemy', value: '590' },
+                                { label: 'Saint Helena', value: '290' },
+                                { label: 'Saint Kitts And Nevis', value: '1869' },
+                                { label: 'Saint Lucia', value: '1758' },
+                                { label: 'Saint Martin', value: '590' },
+                                { label: 'Saint Pierre And Miquelon', value: '508' },
+                                { label: 'Saint Vincent And The Grenadines', value: '1784' },
+                                { label: 'Samoa', value: '685' },
+                                { label: 'San Marino', value: '378' },
+                                { label: 'Sao Tome And Principe', value: '239' },
+                                { label: 'Saudi Arabia', value: '966' },
+                                { label: 'Senegal', value: '221' },
+                                { label: 'Serbia', value: '381' },
+                                { label: 'Seychelles', value: '248' },
+                                { label: 'Sint Maarten', value: '1721' },
+                                { label: 'Sierra Leone', value: '232' },
+                                { label: 'Slovakia', value: '421' },
+                                { label: 'Slovenia', value: '386' },
+                                { label: 'Solomon Islands', value: '677' },
+                                { label: 'South Africa', value: '27' },
+                                { label: 'South Georgia And The South Sandwich Islands', value: '500' },
+                                { label: 'Spain', value: '34' },
+                                { label: 'Sri Lanka', value: '94' },
+                                { label: 'Suriname', value: '597' },
+                                { label: 'Svalbard And Jan Mayen', value: '47' },
+                                { label: 'Eswatini', value: '268' },
+                                { label: 'Sweden', value: '46' },
+                                { label: 'Switzerland', value: '41' },
+                                { label: 'Taiwan', value: '886' },
+                                { label: 'Tajikistan', value: '992' },
+                                { label: 'Tanzania, United Republic Of', value: '255' },
+                                { label: 'Thailand', value: '66' },
+                                { label: 'The Territory of Guam', value: '1671' },
+                                { label: 'Timor', value: '670' },
+                                { label: 'Togo', value: '228' },
+                                { label: 'Tokelau', value: '690' },
+                                { label: 'Tonga', value: '676' },
+                                { label: 'Trinidad and Tobago', value: '1868' },
+                                { label: 'Turkey', value: '90' },
+                                { label: 'Turkmenistan', value: '993' },
+                                { label: 'Turks And Caicos Islands', value: '1649' },
+                                { label: 'Tuvalu', value: '688' },
+                                { label: 'Uganda', value: '256' },
+                                { label: 'United Arab Emirates', value: '971' },
+                                { label: 'United Kingdom', value: '44' },
+                                { label: 'Uruguay', value: '598' },
+                                { label: 'Uzbekistan', value: '998' },
+                                { label: 'Vanuatu', value: '678' },
+                                { label: 'Vatican City State', value: '379' },
+                                { label: 'Vietnam', value: '84' },
+                                { label: 'Virgin Islands, British', value: '1284' },
+                                { label: 'Virgin Islands, US', value: '1340' },
+                                { label: 'Wallis And Futuna', value: '681' },
+                                { label: 'Western Sahara', value: '212' },
+                                { label: 'Zambia', value: '260' }
                             ],
                         },
                         {
@@ -462,6 +647,7 @@
                 console.log('验证失败，错误信息:', form.getErrors());
             }
         });
+        const container = document.getElementById('tab-container');
         const lis = document.querySelectorAll('.right_top_tab li');
         lis.forEach((li, index) => {
             li.onclick = function () {
@@ -469,12 +655,13 @@
                 this.classList.add('active');
 
                 if (index === 0) {
-                    // document.querySelector('.pu_contact_right .top_live_form ul li.email').classList.add('active');
-                    // document.querySelector('.pu_contact_right .top_live_form ul li.phone_row').classList.remove('active');
+                    container.dataset.activeTab = 'email';
                 } else if (index === 1) {
-                    // document.querySelector('.pu_contact_right .top_live_form ul li.email').classList.remove('active');
-                    // document.querySelector('.pu_contact_right .top_live_form ul li.phone_row').classList.add('active');
+                    container.dataset.activeTab = 'phone';
                 }
+
+                // 重新评估 when 条件
+                form._evaluateWhenConditions();
             }
         })
     </script>
