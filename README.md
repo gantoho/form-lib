@@ -124,7 +124,10 @@ const form = new Form({
 | `validateTrigger` | `string` | `'blur'` | 全部 | 验证触发方式，见 [validateTrigger](#validatetrigger--验证触发方式) |
 | `rules` | `object` \| `array` |  | 非 group | 验证规则，见 [rules](#rules--验证规则) |
 | `options` | `array` | `[]` | select | 下拉选项数组，见 [options](#options--下拉选项) |
+| `labelField` | `string` | `'label'` | select | 用作显示文本的字段名，见 [options](#自定义字段映射) |
+| `valueField` | `string` | `'value'` | select | 用作实际值的字段名，见 [options](#自定义字段映射) |
 | `displayField` | `string` | `'label'` | select | 选中后显示的字段，见 [displayField](#displayfield--选中显示字段) |
+| `optionRender` | `function` |  | select | 自定义选项渲染函数，见 [options](#自定义选项渲染) |
 | `searchable` | `boolean` | `false` | select | 是否可搜索，见 [searchable](#searchable--可搜索下拉) |
 | `dropdownWidth` | `string` |  | select(组内) | 下拉面板宽度相对所在组的百分比，见 [dropdownWidth](#dropdownwidth--下拉面板宽度) |
 | `icons` | `object` |  | 非 group | 右侧图标组配置，见 [icons](#icons--图标组) |
@@ -298,7 +301,7 @@ rules: [
 
 ### options — 下拉选项
 
-`select` 字段的下拉选项数组，支持两种格式：
+`select` 字段的下拉选项数组，支持多种格式：
 
 **对象数组（推荐）：**
 
@@ -313,11 +316,6 @@ rules: [
 }
 ```
 
-| 属性 | 说明 |
-|---|---|
-| `label` | 选项展示文本 |
-| `value` | 选项的实际值，选中后写入 `form.values[name]` |
-
 **字符串数组：**
 
 ```javascript
@@ -328,7 +326,63 @@ rules: [
 }
 ```
 
-字符串数组会自动转换为 `{ label, value }` 格式，`label` 和 `value` 相同。
+**自定义字段映射：**
+
+当 options 数据的字段名不是标准的 `label`/`value` 时，可通过 `labelField` 和 `valueField` 自定义映射：
+
+```javascript
+{
+    name: 'user', label: '用户', type: 'select', value: '',
+    labelField: 'name',    // 用 'name' 字段作为显示文本
+    valueField: 'id',      // 用 'id' 字段作为实际值
+    options: [
+        { name: '张三', id: '1', age: 25 },
+        { name: '李四', id: '2', age: 30 },
+    ],
+    // 等效于：[{ label: '张三', value: '1' }, { label: '李四', value: '2' }]
+}
+```
+
+| 属性 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `labelField` | `string` | `'label'` | 用作显示文本的字段名 |
+| `valueField` | `string` | `'value'` | 用作实际值的字段名 |
+
+**自定义选项渲染：**
+
+通过 `optionRender` 函数自定义每个选项的渲染方式：
+
+```javascript
+{
+    name: 'user', label: '用户', type: 'select', value: '',
+    optionRender: (option, el) => {
+        // option: 原始选项数据
+        // el: 选项 DOM 元素
+        return `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="${option.avatar}" width="24" height="24" style="border-radius: 50%;">
+                <span>${option.name}</span>
+            </div>
+        `;
+    },
+    options: [
+        { name: '张三', value: '1', avatar: 'https://example.com/zhangsan.jpg' },
+        { name: '李四', value: '2', avatar: 'https://example.com/lisi.jpg' },
+    ],
+}
+```
+
+`optionRender` 函数参数：
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `option` | `object` | 原始选项数据（包含所有字段） |
+| `el` | `HTMLElement` | 选项 DOM 元素 |
+
+返回值：
+- `string`：作为 HTML 设置到选项元素
+- `HTMLElement`：追加到选项元素
+- 无返回值：使用默认渲染
 
 **select 验证：**
 
