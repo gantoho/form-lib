@@ -86,6 +86,7 @@
 
     <script src="lib/form.js"></script>
     <script>
+        // 初始化表单
         const form = new Form({
             container: '#app',
             hiddenFieldStrategy: 'preserve',
@@ -632,7 +633,7 @@
                 },
                 {
                     name: 'password',
-                    type: 'text',
+                    type: 'password',
                     value: '',
                     placeholder: '密码（8-16个字符）',
                     validateTrigger: 'blur',
@@ -648,6 +649,8 @@
                 },
             ]
         })
+        
+        // 提交表单
         document.getElementById('print').addEventListener('click', () => {
             if (form.validate()) {
                 console.log('验证通过，表单值:', form.getValues());
@@ -657,6 +660,8 @@
                 console.log('验证失败，错误信息:', form.getErrors());
             }
         });
+
+        // tab切换
         const container = document.getElementById('tab-container');
         const lis = document.querySelectorAll('.right_top_tab li');
         lis.forEach((li, index) => {
