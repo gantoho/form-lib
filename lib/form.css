@@ -34,6 +34,11 @@
   outline: none;
 }
 
+/* 非搜索模式下，未选中内容时的 placeholder 样式 */
+.select__trigger--placeholder {
+  color: #999;
+}
+
 .select__dropdown {
   display: none;
   position: absolute;
